@@ -3,3 +3,5 @@ output/
 work/
 .nextflow/
 .nextflow.log*
+*.sif
+*.csv
