@@ -38,13 +38,8 @@ process SEGMENT {
     /app/bin/baysor run $spots $args
     """
 }
-// ${spots} -x xc -y -yc -g target -m 4 -s 24 -o . 
 
 workflow {
-    //scale_stds_ch = Channel.fromList(['20%', '30%', '40%'])
-    //seg_confidence_ch = Channel.fromList([0.1, 0.2, 0.3])
-    //spots_channel = Channel.fromPath(params.spots)
-
     test_channel = SEGMENT(params.spots)
     test_channel.view()
 }
