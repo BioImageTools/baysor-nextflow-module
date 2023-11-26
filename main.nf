@@ -7,18 +7,21 @@
 */
 
 params.input = 'help'
-params.spots = "${projectDir}/spots.csv"
-params.x = 'xc'
-params.y = 'yc'
-params.gene_column = 'target'
-params.min_molecules = 5
-params.scale = 24
-params.scale_std = 0.2//'25%'
-params.n_clusters = 15
-params.prior_seg_confidence = 0.2
-docker_img = "sebgoti/baysor_image:latest"
+params.spots = "${projectDir}/transcripts/*spots.csv"
+//params.spots = "/Users/segonzal/Documents/Repositories/iss_transcripts/*.csv"
+//params.x = 'xc'
+//params.y = 'yc'
+//params.gene_column = 'target'
+//params.min_molecules = 5
+//params.scale = 24
+//params.scale_std = 0.2//'25%'
+//params.n_clusters = 15
+//params.prior_seg_confidence = 0.2
+//docker_img = "sebgoti/baysor_image:latest"
+docker_img = "segonzal/baysor_installation_inside_ubuntu:latest"
 
-process CELL_TYPING {
+process SEGMENT {
+    debug true
     container docker_img
     
     input:
@@ -29,10 +32,13 @@ process CELL_TYPING {
     //path '*.txt'
 
     script:
+    def args = task.ext.args ?: '' // if task.ext.args is empty then pass an empty string
     """
-    /app/bin/baysor run $spots -x ${params.x} -y ${params.y} -g ${params.gene_column} -m ${params.min_molecules} -s ${params.scale} --scale-std ${params.scale_std} --save-polygons GeoJSON -p
+    /app/bin/baysor run $spots $args -p
     """
 }
+//     /app/bin/baysor run $spots -x ${params.x} -y ${params.y} -g ${params.gene_column} -m ${params.min_molecules} -s ${params.scale} --scale-std ${params.scale_std} --save-polygons GeoJSON -p
+
 // ${spots} -x xc -y -yc -g target -m 4 -s 24 -o . 
 
 workflow {
@@ -40,6 +46,6 @@ workflow {
     //seg_confidence_ch = Channel.fromList([0.1, 0.2, 0.3])
     //spots_channel = Channel.fromPath(params.spots)
 
-    test_channel = CELL_TYPING(params.spots)
+    test_channel = SEGMENT(Channel.fromPath(params.spots))
     test_channel.view()
 }
