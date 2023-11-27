@@ -7,23 +7,18 @@
 */
 
 params.spots = "${projectDir}/spots.csv"
-//params.x = 'xc'
-//params.y = 'yc'
-//params.gene_column = 'target'
-//params.min_molecules = 5
-//params.scale = 24
-//params.scale_std = 0.2//'25%'
-//params.n_clusters = 15
-//params.prior_seg_confidence = 0.2
-//docker_img = "docker://segonzal/baysor"
+
+//docker_img = "docker://segonzal/baysor_installation_inside_ubuntu:latest"
+docker_img = "segonzal/baysor_installation_inside_ubuntu:latest"
+
 
 process SEGMENT {
     debug true
 
-    //container docker_img
+    container docker_img
     cpus 4
 	memory '8 GB'
-	executor 'slurm'
+	// executor 'slurm'
     
     input:
     path spots
