@@ -7,6 +7,7 @@
 */
 
 params.spots = "${projectDir}/spots.csv"
+params.mask = "${projectDir}/mask_boundaries.tif"
 
 //docker_img = "docker://segonzal/baysor_installation_inside_ubuntu:latest"
 docker_img = "segonzal/baysor_installation_inside_ubuntu:latest"
@@ -21,7 +22,9 @@ process SEGMENT {
 	// executor 'slurm'
     
     input:
+//    tuple path(spots), path(mask)
     path spots
+    path mask
 
     output:
     stdout
@@ -30,11 +33,11 @@ process SEGMENT {
     script:
     def args = task.ext.args ?: ''
     """
-    /app/bin/baysor run $spots $args
+    /app/bin/baysor run $spots $mask $args
     """
 }
 
 workflow {
-    test_channel = SEGMENT(params.spots)
+    test_channel = SEGMENT(params.spots, params.mask)
     test_channel.view()
 }
