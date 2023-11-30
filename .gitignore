@@ -5,3 +5,4 @@ work/
 .nextflow.log*
 *.sif
 *.csv
+.hypothesis
